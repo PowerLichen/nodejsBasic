@@ -1,6 +1,36 @@
 var http = require('http');
 var fs = require('fs');
 var url = require('url');
+
+function templateHTML(title, list, body) {
+    return `
+    <!doctype html>
+    <html>
+    <head>
+    <title>WEB - ${title}</title>
+    <meta charset="utf-8">
+    </head>
+    <body>
+    <h1><a href="/">WEB</a></h1>
+    ${list}
+    ${body}    
+    </body>
+    </html>
+    `;
+};
+
+function templateList(filelist) {
+    var list = '<ul>'
+    var i = 0;
+    while (i < filelist.length) {
+        list = list + `<li><a href="/?id=${filelist[i]}">${filelist[i]}</a></li>`
+        i = i + 1
+    };
+    list = list + '</ul>';
+    return list;
+}
+
+
 var app = http.createServer(function (req, res) {
     var _url = req.url;
     var queryData = url.parse(_url, true).query;
@@ -27,66 +57,23 @@ var app = http.createServer(function (req, res) {
 
     if (pathname === '/') {
         if (queryData.id === undefined) {
-
             fs.readdir('./data/', function (err, filelist) {
-                console.log(filelist);
+                // console.log(filelist);
                 title = 'Welcome'
                 var description = "HELLO! Welcome my page!";
-
-                var list = '<ul>'
-                var i = 0;
-                while (i < filelist.length) {
-                    list = list + `<li><a href="/?id=${filelist[i]}">${filelist[i]}</a></li>`
-                    i = i + 1
-                }
-                list = list + '</ul>'
-
-                var templete = `
-                <!doctype html>
-                <html>
-                <head>
-                <title>WEB - ${title}</title>
-                <meta charset="utf-8">
-                </head>
-                <body>
-                <h1><a href="/">WEB</a></h1>
-                ${list}
-                <h2>${title}</h2>
-                <p>${description}</p>
-                </body>
-                </html>
-                `;
+                var list = templateList(filelist)
+                var templete = templateHTML(title, list, `<h2>${title}</h2><p>${description}</p>`);
                 res.writeHead(200);
                 res.end(templete);
             });
 
         } else {
             fs.readdir('./data/', function (err, filelist) {
-                var list = '<ul>'
-                var i = 0;
-                while (i < filelist.length) {
-                    list = list + `<li><a href="/?id=${filelist[i]}">${filelist[i]}</a></li>`
-                    i = i + 1
-                }
-                list = list + '</ul>'
                 //URL parse by query string
                 fs.readFile(`data/${title}`, 'utf8', function (err, data) {
                     var description = data;
-                    var templete = `
-                    <!doctype html>
-                    <html>
-                    <head>
-                    <title>WEB - ${title}</title>
-                    <meta charset="utf-8">
-                    </head>
-                    <body>
-                    <h1><a href="/">WEB</a></h1>
-                    ${list}
-                    <h2>${title}</h2>
-                    <p>${description}</p>
-                    </body>
-                    </html>
-                    `;
+                    var list = templateList(filelist)
+                    var templete = templateHTML(title, list, `<h2>${title}</h2><p>${description}</p>`);
                     res.writeHead(200);
                     res.end(templete);
                 });
