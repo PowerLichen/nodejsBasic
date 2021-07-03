@@ -25,32 +25,62 @@ var app = http.createServer(function (req, res) {
     //node.js data transfer
     // res.end('egoing : ' + _url);
 
-    if (pathname == '/') {
-        //URL parse by query string
-        fs.readFile(`data/${title}`, 'utf8', function (err, data) {
-            var description = data;
-            var templete = `
-            <!doctype html>
-            <html>
-            <head>
-            <title>WEB - ${title}</title>
-            <meta charset="utf-8">
-            </head>
-            <body>
-            <h1><a href="/">WEB</a></h1>
-            <ul>
-                <li><a href="/?id=HTML">HTML</a></li>
-                <li><a href="/?id=CSS">CSS</a></li>
-                <li><a href="/?id=JavaScript">JavaScript</a></li>
-            </ul>
-            <h2>${title}</h2>
-            <p>${data}</p>
-            </body>
-            </html>
-            `;
-            res.writeHead(200);
-            res.end(templete);
-        });
+    if (pathname === '/') {
+        if (queryData.id === undefined) {
+            fs.readFile(`data/${title}`, 'utf8', function (err, data) {
+                title = 'Welcome'
+                var description = "HELLO! Welcome my page!";
+                var templete = `
+                <!doctype html>
+                <html>
+                <head>
+                <title>WEB - ${title}</title>
+                <meta charset="utf-8">
+                </head>
+                <body>
+                <h1><a href="/">WEB</a></h1>
+                <ul>
+                    <li><a href="/?id=HTML">HTML</a></li>
+                    <li><a href="/?id=CSS">CSS</a></li>
+                    <li><a href="/?id=JavaScript">JavaScript</a></li>
+                </ul>
+                <h2>${title}</h2>
+                <p>${description}</p>
+                </body>
+                </html>
+                `;
+                res.writeHead(200);
+                res.end(templete);
+            });
+            
+        } else {
+            //URL parse by query string
+            fs.readFile(`data/${title}`, 'utf8', function (err, data) {
+                var description = data;
+                var templete = `
+                <!doctype html>
+                <html>
+                <head>
+                <title>WEB - ${title}</title>
+                <meta charset="utf-8">
+                </head>
+                <body>
+                <h1><a href="/">WEB</a></h1>
+                <ul>
+                    <li><a href="/?id=HTML">HTML</a></li>
+                    <li><a href="/?id=CSS">CSS</a></li>
+                    <li><a href="/?id=JavaScript">JavaScript</a></li>
+                </ul>
+                <h2>${title}</h2>
+                <p>${description}</p>
+                </body>
+                </html>
+                `;
+                res.writeHead(200);
+                res.end(templete);
+            });
+        }
+
     } else {
         res.writeHead(404);
         res.end('Not Found');
