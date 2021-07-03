@@ -27,9 +27,20 @@ var app = http.createServer(function (req, res) {
 
     if (pathname === '/') {
         if (queryData.id === undefined) {
-            fs.readFile(`data/${title}`, 'utf8', function (err, data) {
+
+            fs.readdir('./data/', function (err, filelist) {
+                console.log(filelist);
                 title = 'Welcome'
                 var description = "HELLO! Welcome my page!";
+
+                var list = '<ul>'
+                var i = 0;
+                while (i < filelist.length) {
+                    list = list + `<li><a href="/?id=${filelist[i]}">${filelist[i]}</a></li>`
+                    i = i + 1
+                }
+                list = list + '</ul>'
+
                 var templete = `
                 <!doctype html>
                 <html>
@@ -39,11 +50,7 @@ var app = http.createServer(function (req, res) {
                 </head>
                 <body>
                 <h1><a href="/">WEB</a></h1>
-                <ul>
-                    <li><a href="/?id=HTML">HTML</a></li>
-                    <li><a href="/?id=CSS">CSS</a></li>
-                    <li><a href="/?id=JavaScript">JavaScript</a></li>
-                </ul>
+                ${list}
                 <h2>${title}</h2>
                 <p>${description}</p>
                 </body>
@@ -52,32 +59,37 @@ var app = http.createServer(function (req, res) {
                 res.writeHead(200);
                 res.end(templete);
             });
-            
+
         } else {
-            //URL parse by query string
-            fs.readFile(`data/${title}`, 'utf8', function (err, data) {
-                var description = data;
-                var templete = `
-                <!doctype html>
-                <html>
-                <head>
-                <title>WEB - ${title}</title>
-                <meta charset="utf-8">
-                </head>
-                <body>
-                <h1><a href="/">WEB</a></h1>
-                <ul>
-                    <li><a href="/?id=HTML">HTML</a></li>
-                    <li><a href="/?id=CSS">CSS</a></li>
-                    <li><a href="/?id=JavaScript">JavaScript</a></li>
-                </ul>
-                <h2>${title}</h2>
-                <p>${description}</p>
-                </body>
-                </html>
-                `;
-                res.writeHead(200);
-                res.end(templete);
+            fs.readdir('./data/', function (err, filelist) {
+                var list = '<ul>'
+                var i = 0;
+                while (i < filelist.length) {
+                    list = list + `<li><a href="/?id=${filelist[i]}">${filelist[i]}</a></li>`
+                    i = i + 1
+                }
+                list = list + '</ul>'
+                //URL parse by query string
+                fs.readFile(`data/${title}`, 'utf8', function (err, data) {
+                    var description = data;
+                    var templete = `
+                    <!doctype html>
+                    <html>
+                    <head>
+                    <title>WEB - ${title}</title>
+                    <meta charset="utf-8">
+                    </head>
+                    <body>
+                    <h1><a href="/">WEB</a></h1>
+                    ${list}
+                    <h2>${title}</h2>
+                    <p>${description}</p>
+                    </body>
+                    </html>
+                    `;
+                    res.writeHead(200);
+                    res.end(templete);
+                });
             });
         }
 
