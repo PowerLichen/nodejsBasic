@@ -1,0 +1,24 @@
+<!-- submit 시 쿼리 전송 -->
+<!-- 데이터가 URL로 보이므로 주의 필요 -->
+<!-- 
+<form action="http://localhost:3000/process_create">
+    <p><input type="text" name='title'></p>
+    <p>
+        <textarea name='description'></textarea>
+    </p>
+    <p>
+        <input type="submit">
+    </p>
+</form>
+-->
+
+<!-- 쿼리 데이터가 보이지 않음 -->
+<form action="http://localhost:3000/process_create" method="POST">
+    <p><input type="text" name='title'></p>
+    <p>
+        <textarea name='description'></textarea>
+    </p>
+    <p>
+        <input type="submit">
+    </p>
+</form>
