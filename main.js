@@ -82,7 +82,6 @@ var app = http.createServer(function (req, res) {
                 });
             });
         }
-
     } else if (pathname == '/create') {
         fs.readdir('./data/', function (err, filelist) {
             // console.log(filelist);
@@ -126,6 +125,8 @@ var app = http.createServer(function (req, res) {
                 var title = queryData.id;
                 var description = data;
                 var list = templateList(filelist)
+                //create 템플릿 재사용
+                // value값 지정을 통해서 저장된 값 표시
                 var templete = templateHTML(title, list,
                     `
                     <form action="/update_process" method="POST">
@@ -155,8 +156,10 @@ var app = http.createServer(function (req, res) {
             var id = post.id;
             var title = post.title;
             var description = post.description;
+            // 사용자가 지정한 title로 기존에 위치한 이름 변경 
             fs.rename(`data/${id}`, `data/${title}`, function (err) {
                 fs.writeFile(`data/${title}`, description, 'utf8', function (err) {
+                    // 리다이렉트 기능 이용
                     res.writeHead(302, { Location: `/?id=${title}` });
                     res.end();
                 });
@@ -171,6 +174,7 @@ var app = http.createServer(function (req, res) {
         req.on('end', function () {
             var post = qs.parse(body);
             var id = post.id;
+            // 삭제 기능 수행 후 메인페이지로 리다이렉션
             fs.unlink(`data/${id}`, function (err) {
                 res.writeHead(302, { Location: `/` });
                 res.end();
@@ -181,7 +185,6 @@ var app = http.createServer(function (req, res) {
         res.writeHead(404);
         res.end('Not Found');
     };
-
 })
 
 app.listen(3000);
