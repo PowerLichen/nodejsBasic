@@ -2,6 +2,7 @@ var http = require('http');
 var fs = require('fs');
 var url = require('url');
 var qs = require('querystring');
+var path = require('path');
 
 var template = require('./lib/template.js')
 
@@ -37,8 +38,11 @@ var app = http.createServer(function (req, res) {
             });
         } else {
             fs.readdir('./data/', function (err, filelist) {
+                // 해당 위치에서 다른 경로로 이동할 수 없도록
+                // 쿼리를 필터해주는 path 모듈 사용
+                var filteredId = path.parse(queryData.id).base;
                 //URL parse by query string
-                fs.readFile(`data/${queryData.id}`, 'utf8', function (err, data) {
+                fs.readFile(`data/${filteredId}`, 'utf8', function (err, data) {
                     var description = data;
                     var list = template.list(filelist)
                     var html = template.HTML(title, list,
@@ -92,9 +96,10 @@ var app = http.createServer(function (req, res) {
         });
 
     } else if (pathname == '/update') {
-        fs.readdir('./data/', function (err, filelist) {
+        fs.readdir('./data/', function (err, filelist) {            
+            var filteredId = path.parse(queryData.id).base;
             //URL parse by query string
-            fs.readFile(`data/${queryData.id}`, 'utf8', function (err, data) {
+            fs.readFile(`data/${filteredId}}`, 'utf8', function (err, data) {
                 var title = queryData.id;
                 var description = data;
                 var list = template.list(filelist)
@@ -127,10 +132,11 @@ var app = http.createServer(function (req, res) {
         req.on('end', function () {
             var post = qs.parse(body);
             var id = post.id;
+            var filteredId = path.parse(id).base;
             var title = post.title;
             var description = post.description;
             // 사용자가 지정한 title로 기존에 위치한 이름 변경 
-            fs.rename(`data/${id}`, `data/${title}`, function (err) {
+            fs.rename(`data/${filteredId}`, `data/${title}`, function (err) {
                 fs.writeFile(`data/${title}`, description, 'utf8', function (err) {
                     // 리다이렉트 기능 이용
                     res.writeHead(302, { Location: `/?id=${title}` });
@@ -146,9 +152,10 @@ var app = http.createServer(function (req, res) {
         });
         req.on('end', function () {
             var post = qs.parse(body);
-            var id = post.id;
+            var id = post.id;            
+            var filteredId = path.parse(id).base;
             // 삭제 기능 수행 후 메인페이지로 리다이렉션
-            fs.unlink(`data/${id}`, function (err) {
+            fs.unlink(`data/${filteredId}`, function (err) {
                 res.writeHead(302, { Location: `/` });
                 res.end();
             });
