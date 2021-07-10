@@ -1,0 +1,25 @@
+{
+  "name": "njsbasic",
+  "version": "1.0.0",
+  "description": "Node.js 기본에 대한 웹 페이지 구현.",
+  "main": "main.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PowerLichen/nodejsBasic.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PowerLichen/nodejsBasic/issues"
+  },
+  "homepage": "https://github.com/PowerLichen/nodejsBasic#readme",
+  "dependencies": {
+    "sanitize-html": "^2.4.0"
+  }
+}
